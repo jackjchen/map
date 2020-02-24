@@ -8,6 +8,18 @@ project (sparta CXX)
 set (SPARTA_BASE ${CMAKE_CURRENT_SOURCE_DIR})
 include (${SPARTA_BASE}/cmake/sparta-config.cmake)
 
+message("STATUS: implicit incdir   C: ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES}")
+message("STATUS: implicit incdir CXX: ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES}")
+message("STATUS: hacking to clear implicit incdirs")
+# if you don't do this, cmake won't pass the conda $PREFIX/include to
+# the conda compiler and things get crazy
+unset(CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES)
+unset(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES)
+# This has to be done after sparta-config.cmake and before include directories because
+# those variables are maintained as directory properties and will propagate to the subdirectories
+# when we start doing include_directories.  If we clear them after, the toplevel sources will
+# build but the subdirs won't
+
 # Add RapidJSON
 include_directories (SYSTEM ${RAPIDJSON_INCLUDE_DIRS})
 
@@ -179,3 +191,16 @@ add_subdirectory (simdb)
 #
 add_subdirectory (test EXCLUDE_FROM_ALL)
 add_subdirectory (example EXCLUDE_FROM_ALL)
+
+# dump out the value of include directories at the end for debugging
+message(STATUS "<<<BEGIN INCLUDE_DIRECTORIES")
+get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+foreach(dir ${dirs})
+  message(STATUS "'${dir}'")
+endforeach()
+message(STATUS "<<<END INCLUDE_DIRECTORIES")
+
+message("STATUS: FINAL implicit incdir   C: ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES}")
+message("STATUS: FINAL implicit incdir CXX: ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES}")
+
+
