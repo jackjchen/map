@@ -12,11 +12,16 @@ set (VALGRIND_OPTS "--error-exitcode=5 \
       --soname-synonyms=somalloc=NONE")
 set (VALGRIND_TEST_LABEL valgrind_test)
 
+# Setup Ctest options for CI report generation
+set (CI_OPTS "--no-compress-output --test-action Test")
+# ctest needs unescaped space characters between arguments
+separate_arguments (CI_OPTS UNIX_COMMAND ${CI_OPTS})
+
 # Add the custom regress/regress_valgrind targets.
 add_custom_target (regress)
 add_custom_target (regress_valgrind)
-add_custom_command (TARGET regress          POST_BUILD COMMAND ctest -LE ${VALGRIND_TEST_LABEL} -j10)
-add_custom_command (TARGET regress_valgrind POST_BUILD COMMAND ctest -L  ${VALGRIND_TEST_LABEL} -j10)
+add_custom_command (TARGET regress          POST_BUILD COMMAND ctest -LE ${VALGRIND_TEST_LABEL} ${CI_OPTS} -j10)
+add_custom_command (TARGET regress_valgrind POST_BUILD COMMAND ctest -L  ${VALGRIND_TEST_LABEL} ${CI_OPTS} -j10)
 
 #add_subdirectory (Argos)
 add_subdirectory (Array)
