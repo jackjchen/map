@@ -10,11 +10,14 @@ set (VALGRIND_OPTS "--error-exitcode=5 \
        --soname-synonyms=somalloc=NONE")
 set (VALGRIND_TEST_LABEL valgrind_test)
 
+# Setup Ctest options for CI report generation
+set (CI_OPTS "--no-compress-output -T Test")
+
 # Add the custom regress/regress_valgrind targets.
 add_custom_target (simdb_regress)
 add_custom_target (simdb_regress_valgrind)
-add_custom_command(TARGET simdb_regress          POST_BUILD COMMAND ctest -LE ${VALGRIND_TEST_LABEL} -j10)
-add_custom_command(TARGET simdb_regress_valgrind POST_BUILD COMMAND ctest -L  ${VALGRIND_TEST_LABEL} -j10)
+add_custom_command(TARGET simdb_regress          POST_BUILD COMMAND ctest -LE ${VALGRIND_TEST_LABEL} ${CI_OPTS} -j10)
+add_custom_command(TARGET simdb_regress_valgrind POST_BUILD COMMAND ctest -L  ${VALGRIND_TEST_LABEL} ${CI_OPTS} -j10)
 
 add_subdirectory(CoreDatabase)
 add_subdirectory(HDF5Database)
