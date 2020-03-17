@@ -203,4 +203,8 @@ message(STATUS "<<<END INCLUDE_DIRECTORIES")
 message("STATUS: FINAL implicit incdir   C: ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES}")
 message("STATUS: FINAL implicit incdir CXX: ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES}")
 
-
+#
+# Installation
+#
+install(DIRECTORY sparta/ DESTINATION include/sparta)
+install(FILES ${SPARTA_STATIC_LIBS} DESTINATION lib)

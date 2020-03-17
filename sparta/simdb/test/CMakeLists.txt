@@ -11,13 +11,17 @@ set (VALGRIND_OPTS "--error-exitcode=5 \
 set (VALGRIND_TEST_LABEL valgrind_test)
 
 # Setup Ctest options for CI report generation
-set (CI_OPTS "--no-compress-output --test-action Test")
+set (CI_OPTS "--no-compress-output --test-action test")
 # ctest needs unescaped space characters between arguments
 separate_arguments (CI_OPTS UNIX_COMMAND ${CI_OPTS})
 
 # Add the custom regress/regress_valgrind targets.
 add_custom_target (simdb_regress)
 add_custom_target (simdb_regress_valgrind)
+
+# NOTE:
+# running ctest with --test-action test creates Testing/<datetime>/Test.xml
+# that can be loaded into the CI test result tracker
 add_custom_command(TARGET simdb_regress          POST_BUILD COMMAND ctest -LE ${VALGRIND_TEST_LABEL} ${CI_OPTS} -j10)
 add_custom_command(TARGET simdb_regress_valgrind POST_BUILD COMMAND ctest -L  ${VALGRIND_TEST_LABEL} ${CI_OPTS} -j10)
 

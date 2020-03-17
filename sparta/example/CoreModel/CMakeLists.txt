@@ -25,13 +25,17 @@ add_executable(sparta_core_example
 sparta_application(sparta_core_example)
 
 # Setup Ctest options for CI report generation
-set (CI_OPTS "--no-compress-output --test-action Test")
+set (CI_OPTS "--no-compress-output --test-action test")
 # ctest needs unescaped space characters between arguments
 separate_arguments (CI_OPTS UNIX_COMMAND ${CI_OPTS})
 
 # Add the custom regress/regress_valgrind targets.
 add_custom_target (core_example_regress)
 add_custom_target (core_example_regress_valgrind)
+
+# NOTE:
+# running ctest with --test-action test creates Testing/<datetime>/Test.xml
+# that can be loaded into the CI test result tracker
 add_custom_command(TARGET core_example_regress          POST_BUILD COMMAND ctest -LE ${VALGRIND_TEST_LABEL} ${CI_OPTS} -j10)
 add_custom_command(TARGET core_example_regress_valgrind POST_BUILD COMMAND ctest -L  ${VALGRIND_TEST_LABEL} ${CI_OPTS} -j10)
 
