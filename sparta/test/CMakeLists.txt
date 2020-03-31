@@ -12,15 +12,21 @@ set (VALGRIND_OPTS "--error-exitcode=5 \
       --soname-synonyms=somalloc=NONE")
 set (VALGRIND_TEST_LABEL valgrind_test)
 
+set (COVERAGE_OPTS "--include-path=${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/coverage")
+separate_arguments (COVERAGE_OPTS UNIX_COMMAND ${COVERAGE_OPTS})
+
 # Add the custom regress/regress_valgrind targets.
 add_custom_target (regress)
 add_custom_target (regress_valgrind)
+# Add the custom coverage target.
+add_custom_target (coverage)
 
 # NOTE:
 # running ctest with --test-action test creates Testing/<datetime>/Test.xml
 # that can be loaded into the CI test result tracker
 add_custom_command (TARGET regress          POST_BUILD COMMAND ctest -LE ${VALGRIND_TEST_LABEL} -j10 --test-action test)
 add_custom_command (TARGET regress_valgrind POST_BUILD COMMAND ctest -L  ${VALGRIND_TEST_LABEL} -j10 --test-action test)
+#add_custom_command (TARGET coverage POST_BUILD COMMAND kcov --include-path=${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/coverage)
 
 #add_subdirectory (Argos)
 add_subdirectory (Array)

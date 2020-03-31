@@ -10,6 +10,7 @@
 macro (sparta_regress target)
   add_dependencies (regress ${target} )
   add_dependencies (regress_valgrind ${target})
+  add_dependencies (coverage ${target})
 endmacro (sparta_regress)
 
 # A function to add a sparta test with various options
@@ -26,6 +27,7 @@ function (sparta_fully_named_test name target run_valgrind)
           set_tests_properties (valgrind_${name} PROPERTIES LABELS ${VALGRIND_TEST_LABEL})
     endif ()
   endif ()
+  add_test (NAME coverage_${name} COMMAND kcov ${COVERAGE_OPTS} $<TARGET_FILE:${target}>)
   target_link_libraries (${target} ${Sparta_LIBS})
 endfunction (sparta_fully_named_test)
 
