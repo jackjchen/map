@@ -210,7 +210,7 @@ namespace sparta
          */
         Cycle getCycle(const Scheduler::Tick& tick) const
         {
-            return (tick / period_);
+            return (tick / period_)+1; ////RHB
         }
 
         /**
@@ -467,14 +467,14 @@ inline Scheduler::Tick calculateClockCrossingDelay(Scheduler::Tick src_delay, co
     // of being benign or rounding up the src_delay.
 
     sparta::Scheduler::Tick last_src_clk_posedge_tick =
-        current_tick / src_clk->getPeriod() * src_clk->getPeriod();
+         (current_tick / src_clk->getPeriod()) * src_clk->getPeriod();
     sparta_assert(last_src_clk_posedge_tick == current_tick);
 
     num_delay_ticks += src_delay + dst_delay;
 
     sparta::Scheduler::Tick raw_event_arrival_tick = (current_tick + num_delay_ticks);
     sparta::Scheduler::Tick raw_dst_clk_posedge_tick =
-        raw_event_arrival_tick / dst_clk->getPeriod() * dst_clk->getPeriod();
+        (raw_event_arrival_tick / dst_clk->getPeriod()) * dst_clk->getPeriod();
     if (raw_event_arrival_tick != raw_dst_clk_posedge_tick) {
         sparta_assert(raw_event_arrival_tick > raw_dst_clk_posedge_tick);
         num_delay_ticks += dst_clk->getPeriod() - (raw_event_arrival_tick - raw_dst_clk_posedge_tick);
