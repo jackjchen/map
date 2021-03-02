@@ -261,7 +261,7 @@ namespace sparta
                 collector_->collectWithDuration(dat, send_delay_cycles, 1);
             }
 
-            sparta_assert(send_cycle > prev_data_send_cycle_,
+            sparta_assert(send_cycle > prev_data_send_cycle_ || prev_data_send_cycle_ == PREV_DATA_SEND_CYCLE_INIT, ////RHB
                           getLocation()
                           << ": trying to send at cycle "
                           << send_cycle
@@ -347,7 +347,8 @@ namespace sparta
         std::unique_ptr<CollectorType> collector_;
 
         /// Last cycle any data was sent
-        Clock::Cycle prev_data_send_cycle_ = 0;
+        Clock::Cycle PREV_DATA_SEND_CYCLE_INIT = 0xffffffffffffffff; ////RHB
+        Clock::Cycle prev_data_send_cycle_ = PREV_DATA_SEND_CYCLE_INIT; ////RHB
 
         /// loggers
         sparta::log::MessageSource info_logger_;
@@ -486,7 +487,7 @@ namespace sparta
         //! Set the ready state for the port before simulation begins
         void setInitialReadyState(bool is_ready) {
             sparta_assert(scheduler_->isRunning() == false);
-            sparta_assert(scheduler_->getCurrentTick() == 0);
+            sparta_assert(scheduler_->getCurrentTick() == 0); //RHB, this was 0 -> 1 -> 0
             cur_is_ready_ = is_ready;
             prev_is_ready_ = is_ready;
         }
