@@ -329,7 +329,7 @@ namespace sparta
          */
         void onConfiguring_() override {
             // Create subtree, which may want to look at parameters
-            res_fact_->createSubtree(this);
+            ////res_fact_->createSubtree(this); ////RHB in initConfigurables_
         }
 
         /*!
@@ -374,6 +374,9 @@ namespace sparta
             sparta_assert(params_ != 0); // Params must not be NULL
             params_->resetReadCounts(); // Reset read-counts to 0
 
+            // Create subtree, which may want to look at parameters ////RHB
+            res_fact_->createSubtree(this); ////RHB was removed in Sparta
+            
             std::string res_type = res_fact_->getResourceType();
             if(res_type == ""){
                 throw SpartaException("resource type for ResourceFactory associated with ")
