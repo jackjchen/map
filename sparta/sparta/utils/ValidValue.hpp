@@ -1,6 +1,5 @@
 // <Port> -*- C++ -*-
 
-
 /**
  * \file   ValidValue.hpp
  *
@@ -38,10 +37,17 @@ namespace utils
          * \brief Construct with a valid starting value
          * \param start The value to start with
          */
-        template<typename ...ArgsT>
-        ValidValue(ArgsT&& ...args) :
+        ////RHB
+        //template<typename ...ArgsT>
+        //ValidValue(ArgsT&& ...args) :
+        //    valid_(true),
+        //    value_(std::forward<ArgsT>(args)...)
+        //{}
+
+        ////RHB
+        ValidValue(const value_type & start) :
             valid_(true),
-            value_(std::forward<ArgsT>(args)...)
+            value_(start)
         {}
 
         //! Allow moves
